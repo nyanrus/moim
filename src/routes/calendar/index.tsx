@@ -28,7 +28,7 @@ function MyCalendarPage() {
   });
 
   useEffect(() => {
-    fetch("/api/users/settings")
+    fetch("/api/me/settings")
       .then((r) => {
         if (r.status === 401) {
           navigate({ to: "/auth/signin", search: { returnTo: "/calendar" } });
@@ -44,7 +44,7 @@ function MyCalendarPage() {
       })
       .catch(() => setLoading(false));
 
-    fetch("/api/users/calendar-events")
+    fetch("/api/me/calendar-events")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data?.events) setCalendarEvents(data.events);
@@ -121,7 +121,7 @@ function MyCalendarPage() {
                       return;
                     setCalendarLoading(true);
                     try {
-                      const res = await fetch("/api/users/calendar-token", {
+                      const res = await fetch("/api/me/calendar-token", {
                         method: "POST",
                       });
                       if (res.ok) {
@@ -149,7 +149,7 @@ function MyCalendarPage() {
                       return;
                     setCalendarLoading(true);
                     try {
-                      const res = await fetch("/api/users/calendar-token", {
+                      const res = await fetch("/api/me/calendar-token", {
                         method: "DELETE",
                       });
                       if (res.ok) {
@@ -172,7 +172,7 @@ function MyCalendarPage() {
               onClick={async () => {
                 setCalendarLoading(true);
                 try {
-                  const res = await fetch("/api/users/calendar-token", {
+                  const res = await fetch("/api/me/calendar-token", {
                     method: "POST",
                   });
                   if (res.ok) {

@@ -99,7 +99,7 @@ export function LinkAccountDialog({
 
     const poll = async () => {
       try {
-        const res = await fetch("/api/auth/otp-check", {
+        const res = await fetch("/api/auth/otp-checks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ handle: normalized, challengeId }),

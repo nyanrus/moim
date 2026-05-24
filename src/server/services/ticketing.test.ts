@@ -55,7 +55,7 @@ const paidInput = {
   customer: { name: "Kim", email: "kim@example.com" },
   answers: [{ questionId: "question-1", answer: "Yes" }],
   baseUrl: "https://moim.example",
-  callbackUrl: "https://moim.example/api/ticket-payment-callbacks",
+  callbackUrl: "https://moim.example/api/webhooks/ticket-payments",
 };
 
 describe("deriveNewEventTicketingSettings", () => {

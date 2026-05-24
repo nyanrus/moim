@@ -44,7 +44,7 @@ export function RemoteFollowDialog({ actorHandle, className, children }: { actor
     setActorInfo(null);
 
     try {
-      const response = await fetch("/api/webfinger", {
+      const response = await fetch("/api/fediverse/webfinger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fediverseId: input, actorHandle }),

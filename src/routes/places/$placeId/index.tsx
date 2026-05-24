@@ -19,7 +19,7 @@ import {
 import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
-import { usePostHog } from "posthog-js/react";
+import { usePostHog } from "~/hooks/posthog";
 import { UserFacingMap } from "~/components/maps";
 import { Calendar } from "lucide-react";
 import { type PlaceCategorySummary, resolveCategoryLabel } from "~/lib/place";

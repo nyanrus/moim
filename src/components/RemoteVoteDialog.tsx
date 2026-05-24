@@ -42,7 +42,7 @@ export function RemoteVoteDialog({
     setError("");
 
     try {
-      const response = await fetch("/api/instance-lookup", {
+      const response = await fetch("/api/fediverse/instance-lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ handle: input }),

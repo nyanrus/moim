@@ -35,7 +35,7 @@ function SettingsPage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/users/settings")
+    fetch("/api/me/settings")
       .then((r) => {
         if (r.status === 401) {
           navigate({ to: "/auth/signin", search: { returnTo: "/settings" } });
@@ -64,7 +64,7 @@ function SettingsPage() {
     setSuccess(false);
 
     try {
-      const res = await fetch("/api/users/settings", {
+      const res = await fetch("/api/me/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ language: language || undefined }),
@@ -98,7 +98,7 @@ function SettingsPage() {
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wide text-[#333]">Federation</h3>
           <p className="text-[13px] text-[#888] mt-1">
-            Configure how your posts appear on the fediverse.
+            Set the language tag attached to your Fediverse posts.
           </p>
         </div>
 

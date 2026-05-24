@@ -232,7 +232,7 @@ apiRouter.post("/auth/otp-verifications", defineEventHandler(async (event) => {
   return verifyOtp({ request: toWebRequest(event) });
 }));
 
-apiRouter.post("/auth/otp-check", defineEventHandler(async (event) => {
+apiRouter.post("/auth/otp-checks", defineEventHandler(async (event) => {
   return otpCheck({ request: toWebRequest(event) });
 }));
 
@@ -260,7 +260,7 @@ apiRouter.post("/auth/hackerspub/graphql-callback", defineEventHandler(async (ev
   return hackerspubGraphqlCallbackApi({ request: toWebRequest(event) });
 }));
 
-apiRouter.post("/ticket-payment-callbacks", defineEventHandler(async (event) => {
+apiRouter.post("/webhooks/ticket-payments", defineEventHandler(async (event) => {
   return ticketPaymentCallback({ request: toWebRequest(event) });
 }));
 
@@ -292,27 +292,27 @@ apiRouter.post("/auth/merge-account", defineEventHandler(async (event) => {
   return mergeAccount({ request: toWebRequest(event) });
 }));
 
-apiRouter.get("/users/settings", defineEventHandler(async (event) => {
+apiRouter.get("/me/settings", defineEventHandler(async (event) => {
   return getUserSettings({ request: toWebRequest(event) });
 }));
 
-apiRouter.patch("/users/settings", defineEventHandler(async (event) => {
+apiRouter.patch("/me/settings", defineEventHandler(async (event) => {
   return updateUserSettings({ request: toWebRequest(event) });
 }));
 
-apiRouter.post("/users/calendar-token", defineEventHandler(async (event) => {
+apiRouter.post("/me/calendar-token", defineEventHandler(async (event) => {
   return generateCalendarToken({ request: toWebRequest(event) });
 }));
 
-apiRouter.delete("/users/calendar-token", defineEventHandler(async (event) => {
+apiRouter.delete("/me/calendar-token", defineEventHandler(async (event) => {
   return revokeCalendarToken({ request: toWebRequest(event) });
 }));
 
-apiRouter.get("/users/favourites", defineEventHandler(async (event) => {
+apiRouter.get("/me/favourites", defineEventHandler(async (event) => {
   return getUserFavourites({ request: toWebRequest(event) });
 }));
 
-apiRouter.get("/users/calendar-events", defineEventHandler(async (event) => {
+apiRouter.get("/me/calendar-events", defineEventHandler(async (event) => {
   return getUserCalendarEvents({ request: toWebRequest(event) });
 }));
 
@@ -967,7 +967,7 @@ apiRouter.get("/countries", defineEventHandler(async () => {
   return listPublicCountries();
 }));
 
-apiRouter.get("/home/carousel", defineEventHandler(async (event) => {
+apiRouter.get("/carousel", defineEventHandler(async (event) => {
   return getCarouselSlides({ request: toWebRequest(event) });
 }));
 
@@ -979,11 +979,11 @@ apiRouter.post("/banner-clicks", defineEventHandler(async (event) => {
   return trackBannerClick({ request: toWebRequest(event) });
 }));
 
-apiRouter.post("/webfinger", defineEventHandler(async (event) => {
+apiRouter.post("/fediverse/webfinger", defineEventHandler(async (event) => {
   return webfingerLookup({ request: toWebRequest(event) });
 }));
 
-apiRouter.post("/instance-lookup", defineEventHandler(async (event) => {
+apiRouter.post("/fediverse/instance-lookup", defineEventHandler(async (event) => {
   return instanceLookup({ request: toWebRequest(event) });
 }));
 

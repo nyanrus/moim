@@ -23,8 +23,11 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { useAuth } from "~/routes/__root";
-import { usePostHog } from "posthog-js/react";
+import { usePostHog } from "~/hooks/posthog";
 import { sanitizeReturnTo } from "~/lib/return-to";
+import { MastodonDialogForm } from "~/components/auth-providers/MastodonDialogForm";
+import { MiAuthDialogForm } from "~/components/auth-providers/MiAuthDialogForm";
+import { HackersPubDialogForm } from "~/components/auth-providers/HackersPubDialogForm";
 
 const checkAlreadySignedIn = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -141,318 +144,7 @@ function StepIndicator({ phase }: { phase: Phase }) {
   );
 }
 
-// ─── Provider Dialog Forms ──────────────────────────────────────────────────
-
-function MastodonDialogForm({ onClose: _onClose, returnTo }: { onClose: () => void; returnTo?: string }) {
-  const [instance, setInstance] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function submit() {
-    setError("");
-    const trimmed = instance.trim();
-    if (!trimmed) {
-      setError("Please enter a Mastodon instance");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/mastodon/oauth-start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ instance: trimmed, returnTo }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Failed to start Mastodon login");
-        setLoading(false);
-        return;
-      }
-      window.location.href = data.redirectUrl;
-    } catch {
-      setError("Network error");
-      setLoading(false);
-    }
-  }
-
-  const trimmed = instance.trim();
-
-  return (
-    <div className="flex flex-col sm:flex-row gap-6">
-      <div className="flex flex-col items-center justify-center sm:w-40 sm:shrink-0 sm:border-r sm:pr-6">
-        <span className="text-5xl">🐘</span>
-        <p className="mt-2 text-lg font-semibold">Mastodon</p>
-        <p className="text-xs text-muted-foreground text-center mt-1">
-          OAuth authorization
-        </p>
-      </div>
-
-      <div className="flex-1 space-y-4">
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            submit();
-          }}
-          className="space-y-4"
-        >
-          <div className="space-y-2">
-            <Label htmlFor="mastodon-instance">Your instance</Label>
-            <Input
-              id="mastodon-instance"
-              type="text"
-              placeholder="mastodon.social"
-              value={instance}
-              onChange={(e) => setInstance(e.target.value)}
-              required
-              autoFocus
-            />
-          </div>
-
-          {trimmed && (
-            <p className="text-xs text-muted-foreground">
-              → You'll be redirected to <strong>{trimmed}</strong> to authorize
-            </p>
-          )}
-
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Redirecting..." : "Continue →"}
-          </Button>
-        </form>
-
-        <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-          <span>🔒</span> Read-only access — we never post on your behalf
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function MiAuthDialogForm({ onClose: _onClose, returnTo }: { onClose: () => void; returnTo?: string }) {
-  const [instance, setInstance] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function submit() {
-    setError("");
-    const trimmed = instance.trim();
-    if (!trimmed) {
-      setError("Please enter a Misskey instance");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/misskey/miauth-start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ instance: trimmed, returnTo }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Failed to start Misskey login");
-        setLoading(false);
-        return;
-      }
-      window.location.href = data.redirectUrl;
-    } catch {
-      setError("Network error");
-      setLoading(false);
-    }
-  }
-
-  const trimmed = instance.trim();
-
-  return (
-    <div className="flex flex-col sm:flex-row gap-6">
-      <div className="flex flex-col items-center justify-center sm:w-40 sm:shrink-0 sm:border-r sm:pr-6">
-        <span className="text-5xl">🔑</span>
-        <p className="mt-2 text-lg font-semibold">Misskey</p>
-        <p className="text-xs text-muted-foreground text-center mt-1">
-          MiAuth authorization
-        </p>
-      </div>
-
-      <div className="flex-1 space-y-4">
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            submit();
-          }}
-          className="space-y-4"
-        >
-          <div className="space-y-2">
-            <Label htmlFor="miauth-instance">Your instance</Label>
-            <Input
-              id="miauth-instance"
-              type="text"
-              placeholder="misskey.io"
-              value={instance}
-              onChange={(e) => setInstance(e.target.value)}
-              required
-              autoFocus
-            />
-          </div>
-
-          {trimmed && (
-            <p className="text-xs text-muted-foreground">
-              → You'll be redirected to <strong>{trimmed}</strong> to authorize
-            </p>
-          )}
-
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Redirecting..." : "Continue →"}
-          </Button>
-        </form>
-
-        <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-          <span>🔒</span> Read-only access — we never post on your behalf
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// ─── HackersPub GraphQL Auth ────────────────────────────────────────────────
-
-function HackersPubDialogForm({ onClose: _onClose, returnTo }: { onClose: () => void; returnTo?: string }) {
-  const [instance, setInstance] = useState("hackers.pub");
-  const [username, setUsername] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
-
-  async function submit() {
-    setError("");
-    const trimmedInstance = instance.trim();
-    const trimmedUsername = username.trim();
-    if (!trimmedInstance) {
-      setError("Please enter a Hackers' Pub instance");
-      return;
-    }
-    if (!trimmedUsername) {
-      setError("Please enter your username");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/hackerspub/graphql-start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ instance: trimmedInstance, username: trimmedUsername, returnTo }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message ?? data.error ?? "Failed to start login");
-        setLoading(false);
-        return;
-      }
-      setSent(true);
-      setLoading(false);
-    } catch {
-      setError("Network error");
-      setLoading(false);
-    }
-  }
-
-  if (sent) {
-    return (
-      <div className="flex flex-col sm:flex-row gap-6">
-        <div className="flex flex-col items-center justify-center sm:w-40 sm:shrink-0 sm:border-r sm:pr-6">
-          <span className="text-5xl">💻</span>
-          <p className="mt-2 text-lg font-semibold">Hackers' Pub</p>
-        </div>
-        <div className="flex-1 space-y-4">
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Check your email!</p>
-            <p className="text-sm text-muted-foreground">
-              We sent a verification link to the email associated with your Hackers' Pub account
-              <strong> @{username.trim()}</strong>. Click the link to complete sign-in.
-            </p>
-          </div>
-          <Button variant="outline" size="sm" onClick={() => { setSent(false); setError(""); }}>
-            Try again
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col sm:flex-row gap-6">
-      <div className="flex flex-col items-center justify-center sm:w-40 sm:shrink-0 sm:border-r sm:pr-6">
-        <span className="text-5xl">💻</span>
-        <p className="mt-2 text-lg font-semibold">Hackers' Pub</p>
-        <p className="text-xs text-muted-foreground text-center mt-1">
-          Email verification
-        </p>
-      </div>
-
-      <div className="flex-1 space-y-4">
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            submit();
-          }}
-          className="space-y-4"
-        >
-          <div className="space-y-2">
-            <Label htmlFor="hp-instance">Instance</Label>
-            <Input
-              id="hp-instance"
-              type="text"
-              placeholder="hackerspub.dev"
-              value={instance}
-              onChange={(e) => setInstance(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="hp-username">Username</Label>
-            <Input
-              id="hp-username"
-              type="text"
-              placeholder="your_username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoFocus
-            />
-          </div>
-
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Sending..." : "Send verification email"}
-          </Button>
-        </form>
-
-        <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-          <span>🔒</span> We'll send a verification link to your email
-        </p>
-      </div>
-    </div>
-  );
-}
-
+// ─── Provider Dialog Forms moved to ~/components/auth-providers/ ────────────
 // ─── Sign In Page ───────────────────────────────────────────────────────────
 
 function SignInPage() {
@@ -580,7 +272,7 @@ function SignInPage() {
     <main className="mx-auto max-w-md py-8">
       <Card>
         <CardHeader className="text-center">
-          <img src="/logo.png" alt="moim" className="mx-auto h-10 w-auto grayscale" />
+          <img src="/logo.webp" alt="moim" className="mx-auto h-10 w-auto grayscale" />
           <CardTitle className="text-2xl">Sign in</CardTitle>
           <CardDescription>
             Sign in with your Fediverse account
@@ -647,7 +339,7 @@ function SignInPage() {
           {phase === "challenge" && (
             <div className="space-y-4">
               <p className="text-sm font-medium">
-                Vote on the emoji poll we sent to your DMs!
+                Vote on the emoji poll we sent to your DMs.
               </p>
               <p className="text-sm text-muted-foreground">
                 Select the highlighted emojis in the poll on your Fediverse
@@ -681,8 +373,8 @@ function SignInPage() {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Can't see the DM? Try a different Fediverse client, or check
-                your message requests.
+                Can't see the DM? Check your message requests, or try a
+                different Fediverse client.
               </p>
             </div>
           )}
@@ -718,7 +410,7 @@ function SignInPage() {
                 </AlertDescription>
               </Alert>
               <div className="flex gap-3">
-                <Button onClick={() => setPhase("challenge")}>Retry</Button>
+                <Button onClick={() => setPhase("challenge")}>Retry challenge</Button>
                 <Button variant="outline" onClick={reset}>
                   Start over
                 </Button>

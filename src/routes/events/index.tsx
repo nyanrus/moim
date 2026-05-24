@@ -210,8 +210,8 @@ function EventsPage() {
         </Card>
       ) : (
         <div>
-          {groupEventsByDate(events).map(([dateKey, dateEvents]) => (
-            <div key={dateKey}>
+          {groupEventsByDate(events).map(([dateKey, dateEvents], i) => (
+            <div key={dateKey} className={i > 0 ? "mt-6" : undefined}>
               <div className="sticky top-14 z-10 bg-background py-2 border-b-2 border-foreground">
                 <h3 className="text-xs font-bold uppercase tracking-wide text-[#333]">{dateKey}</h3>
               </div>
@@ -284,7 +284,7 @@ function EventCard({ event }: { event: EventItem }) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
-              <img src="/logo.png" alt="" className="w-8 h-8 opacity-20 grayscale" />
+              <img src="/logo.webp" alt="" className="w-8 h-8 opacity-20 grayscale" />
             </div>
           )}
         </div>

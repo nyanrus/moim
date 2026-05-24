@@ -183,7 +183,7 @@ function OnboardingPage() {
     <main className="mx-auto max-w-2xl py-8">
       <Card>
         <CardHeader className="space-y-3">
-          <img src="/logo.png" alt="moim" className="mx-auto h-10 w-auto grayscale" />
+          <img src="/logo.webp" alt="moim" className="mx-auto h-10 w-auto grayscale" />
           {/* Step dots */}
           <div className="flex items-center justify-center gap-2">
             {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
@@ -300,7 +300,7 @@ function OnboardingPage() {
 
                   <div className="space-y-1.5">
                     {recommendedInstances.length > 0 && (
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      <p className="text-xs font-semibold text-foreground uppercase tracking-wide border-t pt-3">
                         All servers
                       </p>
                     )}
@@ -347,8 +347,8 @@ function OnboardingPage() {
                     },
                     {
                       num: "2",
-                      title: "Check your DMs",
-                      desc: "We send an emoji poll to your Fediverse account",
+                      title: "Open your DMs",
+                      desc: "Moim sends an emoji poll to your Fediverse account",
                     },
                     {
                       num: "3",

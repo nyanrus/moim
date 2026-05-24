@@ -13,7 +13,7 @@ const input: CreateTicketCheckoutInput = {
   customer: { moimUserId: "user-1", name: "Kim", email: "kim@example.com" },
   successUrl: "https://moim.example/events/event-1/register/success",
   cancelUrl: "https://moim.example/events/event-1/register",
-  callbackUrl: "https://moim.example/api/ticket-payment-callbacks",
+  callbackUrl: "https://moim.example/api/webhooks/ticket-payments",
 };
 
 describe("TicketPaymentClient", () => {

@@ -93,7 +93,7 @@ export const POST = async ({ request }: { request: Request }) => {
             customer: {},
             answers: body.answers ?? [],
             baseUrl: url.origin,
-            callbackUrl: `${url.origin}/api/ticket-payment-callbacks`,
+            callbackUrl: `${url.origin}/api/webhooks/ticket-payments`,
           },
           {
             getTicketingSetting: async (eventId) => {
